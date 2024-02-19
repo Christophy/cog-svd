@@ -1,0 +1,27 @@
+name: Push to Replicate
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          overprovision-lvm: true
+          remove-dotnet: 'true'
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Cog
+        uses: replicate/setup-cog@v1
+        with:
+          token: ${{ secrets.REPLICATE_API_TOKEN }}
+
+      - name: Push to Replicate
+        run: |
+          cog push r8.im/christophy/stable-video-diffusion
